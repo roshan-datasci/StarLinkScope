@@ -30,12 +30,11 @@ clean_df["Epoch"] = pd.to_datetime(clean_df["Epoch"])
 # -----------------------------
 
 st.title("🛰️ STARLINKSCOPE")
-
-st.subheader("Starlink Satellite Analysis")
+st.subheader("Starlink Satellite Analysis Dashboard")
 
 st.write(
-    "This dashboard explores satellite altitude, "
-    "inclination and orbital characteristics."
+    "Explore satellite altitude, inclination, orbit groups, "
+    "and other orbital characteristics through interactive data analysis."
 )
 
 # -----------------------------
@@ -43,6 +42,10 @@ st.write(
 # -----------------------------
 
 st.sidebar.header("🔍 Satellite Filters")
+
+st.sidebar.write(
+    "Use the filters below to explore a subset of the satellite dataset."
+)
 
 orbit_options = ["All"] + sorted(
     clean_df["Orbit_Group"].dropna().unique().tolist()
@@ -78,6 +81,7 @@ st.sidebar.metric(
     f"{len(filtered_df):,}"
 )
 
+st.divider()
 
 # -----------------------------
 # Calculate metrics
@@ -97,6 +101,11 @@ maximum_altitude = clean_df["Altitude_km"].max()
 # -----------------------------
 # Display metrics
 # -----------------------------
+st.header("📊 Satellite Overview")
+
+st.write(
+    "Key statistics calculated from the Starlink satellite dataset."
+)
 
 col1, col2, col3, col4, col5 = st.columns(5)
 
@@ -134,7 +143,7 @@ with col5:
         "Maximum Altitude",
         f"{maximum_altitude:.2f} km"
     )
-
+st.divider()
 
 # -----------------------------
 # Altitude Analysis
@@ -249,12 +258,13 @@ st.scatter_chart(
     y="Altitude_km"
 )
 
-
+st.divider()
 # -----------------------------
 # Key Findings
 # -----------------------------
 
 st.header("🔎 Key Findings")
+
 
 st.write(
     "• Starlink satellites are distributed across several "
@@ -270,7 +280,12 @@ st.write(
     "• Satellite altitude is not uniformly distributed."
 )
 
+st.write(
+    "• The dataset contains satellites across a wide range "
+    "of orbital altitudes."
+)
 
+st.divider()
 # -----------------------------
 # Satellite Data
 # -----------------------------
@@ -280,4 +295,10 @@ st.header("📋 Satellite Data")
 st.dataframe(
     filtered_df.head(100),
     use_container_width=True
+)
+
+st.divider()
+
+st.caption(
+    "StarLinkScope — Starlink Satellite Data Analysis Project"
 )
