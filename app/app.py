@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import plotly.express as px
 
 
 # -----------------------------
@@ -36,6 +37,47 @@ st.write(
     "This dashboard explores satellite altitude, "
     "inclination and orbital characteristics."
 )
+
+# -----------------------------
+# Satellite Filters
+# -----------------------------
+
+st.sidebar.header("🔍 Satellite Filters")
+
+orbit_options = ["All"] + sorted(
+    clean_df["Orbit_Group"].dropna().unique().tolist()
+)
+
+selected_orbit = st.sidebar.selectbox(
+    "Select Orbit Group",
+    orbit_options
+)
+
+min_altitude = float(clean_df["Altitude_km"].min())
+max_altitude = float(clean_df["Altitude_km"].max())
+
+selected_altitude = st.sidebar.slider(
+    "Maximum Altitude (km)",
+    min_value=min_altitude,
+    max_value=max_altitude,
+    value=max_altitude
+)
+
+filtered_df = clean_df[
+    clean_df["Altitude_km"] <= selected_altitude
+]
+
+if selected_orbit != "All":
+    filtered_df = filtered_df[
+        filtered_df["Orbit_Group"] == selected_orbit
+    ]
+
+
+st.sidebar.metric(
+    "Filtered Satellites",
+    f"{len(filtered_df):,}"
+)
+
 
 # -----------------------------
 # Calculate metrics
@@ -93,22 +135,140 @@ with col5:
         f"{maximum_altitude:.2f} km"
     )
 
+
+# -----------------------------
+# Altitude Analysis
+# -----------------------------
+
 st.header("📈 Altitude Analysis")
+
 st.write(
     f"The average satellite altitude is "
     f"{average_altitude:.2f} km."
 )
 
+
 # -----------------------------
 # Orbit Group Analysis
 # -----------------------------
 
-
 st.header("📊 Satellite Distribution by Orbit Group")
 
-orbit_counts = clean_df["Orbit_Group"].value_counts()
+orbit_counts = clean_df["Orbit_Group"].value_counts().reset_index()
 
-st.bar_chart(orbit_counts)
+orbit_counts.columns = [
+    "Orbit_Group",
+    "Satellite_Count"
+]
+
+fig_orbit = px.bar(
+    orbit_counts,
+    x="Orbit_Group",
+    y="Satellite_Count",
+    title="Satellite Distribution by Orbit Group"
+)
+
+fig_orbit.update_xaxes(
+    tickangle=0
+)
+
+st.plotly_chart(
+    fig_orbit,
+    use_container_width=True
+)
+
+
+# -----------------------------
+# Altitude Distribution
+# -----------------------------
+
+st.header("📈 Altitude Distribution")
+
+altitude_bins = [
+    0,
+    200,
+    300,
+    400,
+    500,
+    600
+]
+
+altitude_labels = [
+    "0–200 km",
+    "200–300 km",
+    "300–400 km",
+    "400–500 km",
+    "500–600 km"
+]
+
+clean_df["Altitude_Range"] = pd.cut(
+    clean_df["Altitude_km"],
+    bins=altitude_bins,
+    labels=altitude_labels
+)
+
+altitude_counts = clean_df["Altitude_Range"].value_counts(
+    sort=False
+).reset_index()
+
+altitude_counts.columns = [
+    "Altitude_Range",
+    "Satellite_Count"
+]
+
+fig_altitude = px.bar(
+    altitude_counts,
+    x="Altitude_Range",
+    y="Satellite_Count",
+    title="Satellite Distribution by Altitude"
+)
+
+fig_altitude.update_xaxes(
+    tickangle=0
+)
+
+st.plotly_chart(
+    fig_altitude,
+    use_container_width=True
+)
+
+
+# -----------------------------
+# Altitude vs Inclination
+# -----------------------------
+
+st.header("🔵 Altitude vs Inclination")
+
+st.write(
+    "Relationship between satellite altitude and orbital inclination."
+)
+
+st.scatter_chart(
+    clean_df,
+    x="Inclination_deg",
+    y="Altitude_km"
+)
+
+
+# -----------------------------
+# Key Findings
+# -----------------------------
+
+st.header("🔎 Key Findings")
+
+st.write(
+    "• Starlink satellites are distributed across several "
+    "distinct inclination groups."
+)
+
+st.write(
+    "• Major inclination concentrations occur around "
+    "53°, 70° and 98°."
+)
+
+st.write(
+    "• Satellite altitude is not uniformly distributed."
+)
 
 
 # -----------------------------
@@ -118,6 +278,6 @@ st.bar_chart(orbit_counts)
 st.header("📋 Satellite Data")
 
 st.dataframe(
-    clean_df.head(100),
+    filtered_df.head(100),
     use_container_width=True
 )
