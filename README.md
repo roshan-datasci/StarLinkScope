@@ -1,21 +1,40 @@
-# StarLinkScope
+# 🛰️ StarLinkScope
 
-Starlink Satellite Data Analysis and Visualization.
+## Starlink Satellite Analysis Dashboard
 
-## Project Status
+StarLinkScope is a Data Science project that explores Starlink satellite data using Python, Pandas, Plotly and Streamlit.
 
-🚧 Day 1 — Project setup
+The project analyzes satellite altitude, orbital inclination, orbit groups and other orbital characteristics through data analysis and interactive visualizations.
 
-## Goal
+---
 
-Analyze Starlink satellite data using Python and create an interactive data visualization dashboard.
+## 📊 Project Overview
 
-## Technologies
+The dataset contains information about thousands of Starlink satellites.
 
-- Python
-- Pandas
-- NumPy
-- Matplotlib
-- Seaborn
-- Plotly
-- Streamlit
+StarLinkScope provides:
+
+- Satellite statistics
+- Altitude analysis
+- Orbit group distribution
+- Altitude vs inclination visualization
+- Interactive satellite filtering
+- Satellite data exploration
+
+---
+
+## 📁 Project Structure
+
+```text
+StarLinkScope/
+├── data/
+│   ├── raw/
+│   └── processed/
+├── notebooks/
+│   └── 01_explore_starlink.ipynb
+├── app/
+│   └── app.py
+├── visualizations/
+├── .gitignore
+├── README.md
+└── requirements.txt
