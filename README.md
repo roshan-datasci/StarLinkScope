@@ -2,6 +2,8 @@
 
 ## Starlink Satellite Analysis Dashboard
 
+[Open Live Dashboard](https://starlinkscope-ihiienterkxcyhk6xaendg.streamlit.app/)
+
 StarLinkScope is a Data Science project focused on exploring and analyzing Starlink satellite data using Python, Pandas, Matplotlib, Plotly, and Streamlit.
 
 The project was created to understand how satellite orbital data can be cleaned, analyzed, visualized, and presented through an interactive web dashboard.
